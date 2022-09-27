@@ -1,18 +1,49 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Fieldset, Progress, Tab, TabBody, Tabs, Window, WindowContent, WindowHeader } from "react95";
+import Cookies from "universal-cookie";
 
-function ProgressWindow() {
+const ProgressWindow = ({ toggleProgressWindow, onOpenQr, qrText, resetQrText }) => {
+    const cookies = new Cookies();
+    let snackVal = 0;
+    let swagVal = 0;
+    if (cookies.get("snackProgress") !== undefined) {
+        snackVal = parseInt(cookies.get("snackProgress"));
+    } else {
+        cookies.set("snackProgress", 0, { path: '/' });
+    }
+
+    if (cookies.get("swagProgress") !== undefined) {
+        swagVal = parseInt(cookies.get("swagProgress"));
+    } else {
+        cookies.set("swagProgress", 0, { path: '/' });
+    }
     const [state, setState] = useState({ activeTab: 0 });
+    const [snackProgress, setSnackProgress] = React.useState(snackVal);
+    const [swagProgress, setSwagProgress] = React.useState(swagVal);
     const handleChange = (e, value) => setState({ activeTab: value });
     const { activeTab } = state;
-    const [open, setOpen] = React.useState(true);
 
-    if (open)
+    React.useEffect(() => {
+        console.log(typeof (snackProgress));
+        if (qrText === 'aSBsb3ZlIHRlc2Mh') {
+            if (snackProgress < 7) {
+                setSnackProgress(snackProgress + 1);
+                cookies.set("snackProgress", snackProgress + 1, { path: '/' });
+            }
+            if (swagProgress < 15) {
+                setSwagProgress(swagProgress + 1);
+                cookies.set("swagProgress", swagProgress + 1, { path: '/' });
+            }
+        }
+
+        resetQrText();
+    }, [qrText]);
+
     return (
         <Window className="window" style={{ left: '20px' }}>
             <WindowHeader className="window-header">
                 <span>progress.exe</span>
-                <Button onClick={() => setOpen(false)}>
+                <Button onClick={() => toggleProgressWindow(false)}>
                     <span className="close-icon">X</span>
                 </Button>
             </WindowHeader>
@@ -26,9 +57,9 @@ function ProgressWindow() {
                         <div>
                             <div>
                                 <Fieldset label='Progress:'>
-                                    <p style={{ textAlign: 'left', padding: '0.5em 0 0.5em 0' }}>Visit 5 orgs with a robot:</p>
-                                    <Progress variant='tile' value={80}  />
-                                    <Button style={{ margin: '1em 0 0 0'}}>Scan QR Code</Button>
+                                    <p style={{ textAlign: 'left', padding: '0.5em 0 0.5em 0' }}>Speak to 7 orgs:</p>
+                                    <Progress value={Math.round((snackProgress / 7) * 100)}  />
+                                    <Button style={{ margin: '1em 0 0 0' }} onClick={onOpenQr}>Scan QR Code</Button>
                                 </Fieldset>
                             </div>
                             <br/>
@@ -42,9 +73,9 @@ function ProgressWindow() {
                         <div>
                             <div>
                                 <Fieldset label='Progress:'>
-                                    <p style={{ textAlign: 'left', padding: '0.5em 0 0.5em 0' }}>Speak to 10 orgs:</p>
-                                    <Progress variant='tile' value={80}  />
-                                    <Button style={{ margin: '1em 0 0 0'}}>Scan QR Code</Button>
+                                    <p style={{ textAlign: 'left', padding: '0.5em 0 0.5em 0' }}>Speak to 15 orgs:</p>
+                                    <Progress value={Math.round((swagProgress / 15) * 100)}  />
+                                    <Button style={{ margin: '1em 0 0 0'}} onClick={() => onOpenQr()}>Scan QR Code</Button>
                                 </Fieldset>
                             </div>
                             <br/>

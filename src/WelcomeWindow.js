@@ -1,16 +1,13 @@
 import React from "react";
 import { Button, Panel, Window, WindowContent, WindowHeader } from "react95";
 
-function WelcomeWindow() {
-    const [open, setOpen] = React.useState(true);
-
-    if (open)
+const WelcomeWindow = ({toggleWelcomeWindow}) => {
     return (
         <>
             <Window className="window" style={{ top: '150px' }} >
                 <WindowHeader className="window-header">
                     <span>EOTG.exe</span>
-                    <Button onClick={() => setOpen(false)}>
+                    <Button onClick={() => toggleWelcomeWindow(false)}>
                         <span className="close-icon">X</span>
                     </Button>
                 </WindowHeader>

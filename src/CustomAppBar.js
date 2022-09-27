@@ -3,7 +3,7 @@ import { AppBar, Button, Toolbar, List, ListItem } from "react95";
 
 import startLogo from './windows95.png';
 
-function CustomAppBar() {
+const CustomAppBar = ({toggleWelcomeWindow, toggleProgressWindow}) => {
     const [open, setOpen] = React.useState(false);
 
     return (
@@ -23,13 +23,16 @@ function CustomAppBar() {
                         <List style={{
                             position: 'absolute',
                             left: '0',
-                            top: '100%'
+                            top: '100%',
+                            width: 140
                         }}
-                        onClick={() => setOpen(false)}>
-                            <ListItem>
+                            onClick={() => {
+                                setOpen(false);
+                            }}>
+                            <ListItem onClick={() => toggleProgressWindow(true)}>
                                 Progress
                             </ListItem>
-                            <ListItem>
+                            <ListItem onClick={() => toggleWelcomeWindow(true)}>
                                 About 
                             </ListItem>
                         </List>
