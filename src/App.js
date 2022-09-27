@@ -2,16 +2,17 @@ import logo from './logo.svg';
 import './App.css';
 import { createGlobalStyle, ThemeProvider } from 'styled-components';
 
-import { styleReset, List, ListItem, Divider, Desktop, Window, WindowContent, Cutout } from 'react95';
+import { styleReset, List, ListItem, Divider, Desktop, Window, WindowContent, Cutout, WindowHeader, Button } from 'react95';
 
-import original from 'react95/dist/themes/original';
+import original, { progress } from 'react95/dist/themes/original';
 import ms_sans_serif from 'react95/dist/fonts/ms_sans_serif.woff2';
 import ms_sans_serif_bold from 'react95/dist/fonts/ms_sans_serif_bold.woff2';
 import CustomAppBar from './CustomAppBar';
 import WelcomeWindow from './WelcomeWindow';
 import ProgressWindow from './ProgressWindow';
-import { QrReader } from 'react-qr-reader';
-import QR from './QR';
+import Html5QrcodePlugin from './Scanner';
+import React from 'react';
+import Scanner from './Scanner';
 
 const GlobalStyles = createGlobalStyle`
   ${styleReset}
@@ -48,27 +49,44 @@ const GlobalStyles = createGlobalStyle`
 `;
 
 function App() {
-  return (
-    <div className="App">
-      <GlobalStyles />
-      <ThemeProvider theme={original}>
-        <CustomAppBar/>
-        <WelcomeWindow />
-        <ProgressWindow />
+  const [welcomeOpen, setWelcomeOpen] = React.useState(true);
+  const [progressOpen, setProgressOpen] = React.useState(false);
+  const [qrText, setQrText] = React.useState("");
+  const [scannerOpen, setScannerOpen] = React.useState(false);
+
+  const toggleWelcomeWindow = (isOpen) => {
+    setWelcomeOpen(isOpen);
+  }
+
+  const toggleProgressWindow = (isOpen) => {
+    setProgressOpen(isOpen);
+  }
+
+  const openScanner = () => {
+    setScannerOpen(true);
+  }
+
+  const closeScanner = () => {
+    setScannerOpen(false);
+  }
+
+  const onQrTextChanged = (newText) => {
+    setQrText(newText);
+  }
+
+    return (
+      <div className="App">
+        <GlobalStyles />
+        <ThemeProvider theme={original}>
+          <CustomAppBar toggleProgressWindow={toggleProgressWindow} toggleWelcomeWindow={toggleWelcomeWindow} />
+          {welcomeOpen && (<WelcomeWindow toggleWelcomeWindow={toggleWelcomeWindow} />)}
+          {progressOpen && (<ProgressWindow toggleProgressWindow={toggleProgressWindow} resetQrText={() => setQrText("")} qrText={qrText} onOpenQr={openScanner} onCloseQr={closeScanner} />)}
         
-        <Window style={{ position: 'absolute', top: 0, left: 0 }}>
-          <WindowContent>
-            <Cutout style={{ width: 300, height: 300}}>
-              <div>
-                <QR />
-              </div>
-            </Cutout>
-          </WindowContent>
-        </Window>
+          {scannerOpen && (<Scanner textChanged={onQrTextChanged} onClose={closeScanner}/>)}
         
-      </ThemeProvider>
-    </div>
-  );
-}
+        </ThemeProvider>
+      </div>
+    );
+  }
 
 export default App;
