@@ -13,7 +13,7 @@ const WelcomeWindow = ({toggleWelcomeWindow}) => {
                 </WindowHeader>
                 <WindowContent>
                     <p style={{ textAlign: 'center', fontWeight: 'bold' }}>
-                        Welcome to EOTG Fall 2022!
+                        Welcome to EOTG Fall 2023!
                     </p>
                     <br />
                     <p style={{ textAlign: 'left' }}>Click the &quot;Start&quot; button to start tracking your progress. You're already well on your way to winning some awesome swag!</p>
